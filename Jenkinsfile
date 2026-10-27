@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -28,6 +29,17 @@ pipeline {
                 }
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    docker build \
+                      -t product-service:${BUILD_NUMBER} \
+                      -t product-service:latest \
+                      services/product-services
+                '''
+            }
+        }
     }
 
     post {
@@ -42,3 +54,4 @@ pipeline {
         }
     }
 }
+
