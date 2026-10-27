@@ -40,15 +40,28 @@ pipeline {
                 '''
             }
         }
+
+        stage('Trivy Security Scan') {
+            steps {
+                sh '''
+                    trivy image \
+                      --scanners vuln \
+                      --severity HIGH,CRITICAL \
+                      product-service:${BUILD_NUMBER}
+                '''
+            }
+        }
     }
 
     post {
         success {
             echo 'CI pipeline completed successfully!'
         }
+
         failure {
             echo 'CI pipeline failed. Check the console output.'
         }
+
         always {
             echo 'Pipeline execution finished.'
         }
